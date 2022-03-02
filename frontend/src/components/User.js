@@ -11,6 +11,9 @@ const UserItem = ({user}) => {
                {user.last_name}
            </td>
            <td>
+               {user.username}
+           </td>
+           <td>
                {user.email}
            </td>
        </tr>
@@ -25,6 +28,9 @@ const UserList = ({users}) => {
            </th>
            <th>
                Last Name
+           </th>
+           <th>
+               Username
            </th>
            <th>
                Email
