@@ -23,9 +23,11 @@ router = DefaultRouter()
 router.register('users', UserModelViewSet)
 router.register('projects', ProjectModelViewSet)
 router.register('todos', ToDoModelViewSet)
+# router.register('base', UserApiView, basename='user')
 
 urlpatterns = [
    path('admin/', admin.site.urls),
    path('api-auth/', include('rest_framework.urls')),
    path('api/', include(router.urls)),
+   # path('apiview/', include(router.urls)),
 ]
