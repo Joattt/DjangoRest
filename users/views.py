@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.generics import CreateAPIView, get_object_or_404
 from .models import User
-from .serializers import UserModelSerializer, SimpleUserModelSerializer
+from .serializers import UserModelSerializer, SimpleUserModelSerializer, UserSerializerWithUsernameEmail
 from rest_framework import mixins
 
 # class UserApiView(viewsets.ViewSet):
@@ -27,3 +27,8 @@ class UserModelViewSet(mixins.ListModelMixin,
                        GenericViewSet):
     queryset = User.objects.all()
     serializer_class = SimpleUserModelSerializer
+
+    def get_serializer_class(self):
+        if self.request.version == '0.3':
+            return UserSerializerWithUsernameEmail
+        return SimpleUserModelSerializer
