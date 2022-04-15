@@ -9,6 +9,8 @@ import {BrowserRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
 import UserProjectList from "./components/UserProject";
 import LoginForm from './components/Auth.js'
 import Cookies from 'universal-cookie';
+import ProjectForm from "./components/ProjectForm";
+import ToDoForm from "./components/ToDoForm";
 
 
 const NotFound404 = ({ location }) => {
@@ -140,6 +142,47 @@ class App extends React.Component {
             })
     }
 
+    createProject(name, user) {
+        const headers = this.get_headers()
+        const data = {name: name, user: user}
+        axios.post(`http://127.0.0.1:8000/api/projects/`, data, {headers})
+            .then(response => {
+                let new_project = response.data
+                const user = this.state.users.filter((item) => item.id === new_project.user)[0]
+                new_project.user = user
+                this.setState({project: [...this.state.projects, new_project]})
+            }).catch(error => console.log(error))
+    }
+
+    deleteProject(id) {
+        const headers = this.get_headers()
+        axios.delete(`http://127.0.0.1:8000/api/projects/${id}`, {headers})
+        .then(response => {
+                this.setState({projects: this.state.projects.filter((item)=>item.id !== id)})
+            }).catch(error => console.log(error))
+    }
+
+    createToDo(name, user) {
+        const headers = this.get_headers()
+        const data = {name: name, user: user}
+        axios.post(`http://127.0.0.1:8000/api/projects/`, data, {headers})
+            .then(response => {
+                let new_todo = response.data
+                const user = this.state.users.filter((item) => item.id === new_todo.user)[0]
+                new_todo.user = user
+                this.setState({project: [...this.state.projects, new_todo]})
+            }).catch(error => console.log(error))
+    }
+
+    deleteToDo(id) {
+        const headers = this.get_headers()
+        axios.delete(`http://127.0.0.1:8000/api/todos/${id}`, {headers})
+        .then(response => {
+                this.setState({todos: this.state.todos.filter((item)=>item.id !== id)})
+            }).catch(error => console.log(error))
+    }
+
+
     componentDidMount() {
        this.get_token_from_storage()
        // this.load_data()
@@ -167,7 +210,10 @@ class App extends React.Component {
                     </nav>
                     <Switch>
                         <Route exact path='/' component={() => <UserList items={this.state.users} />} />
-                        <Route exact path='/projects' component={() => <ProjectList items={this.state.projects} />} />
+                        <Route exact path='/projects/create' component={() => <ProjectForm createProject={(name, user) => this.createProject(name, user)} />} />
+                        <Route exact path='/projects' component={() => <ProjectList items={this.state.projects} deleteProject={(id)=>this.deleteProject(id)} />} />
+                        <Route exact path='/todos/create' component={() => <ToDoForm createToDo={(name, user) => this.createToDo(name, user)} />} />
+                        <Route exact path='/todos' component={() => <ToDoList items={this.state.todos} deleteToDo={(id)=>this.deleteToDo(id)} />} />
                         <Route exact path='/login' component={() => <LoginForm get_token={(username, password) => this.get_token(username, password)} />} />
                         <Route path="/user/:id">
                             <UserProjectList items={this.state.projects} />
