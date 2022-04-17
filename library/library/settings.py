@@ -28,6 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS = [
+   "http://localhost:8000",
+   "http://localhost:80",
+   "http://localhost:8080",
    "http://localhost:3000",
 ]
 
@@ -88,8 +91,12 @@ WSGI_APPLICATION = 'library.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'library',
+        'USER': 'admin1',
+        'PASSWORD': 'admin123456',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
