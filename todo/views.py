@@ -1,7 +1,7 @@
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.viewsets import ModelViewSet
 from .models import Project, ToDo
-from .serializers import ProjectModelSerializer, ToDoModelSerializer
+from .serializers import ProjectModelSerializer, ToDoModelSerializer, ProjectSerializer
 
 
 class ProjectLimitOffsetPagination(LimitOffsetPagination):
@@ -19,6 +19,11 @@ class ProjectModelViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Project.objects.filter(name__contains='2')
+
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return ProjectSerializer
+        return ProjectModelSerializer
 
     # def get_queryset(self):
     #     param = self.request.headers.get('param')
